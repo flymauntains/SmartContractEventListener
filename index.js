@@ -8,6 +8,9 @@ const bnbProviderUrl = process.env.BNB_WSS_URL;
 const bnbVaultAddress = process.env.BNB_VAULT_ADDRESS;
 const bnbVaultABI = require('./abis/bnbVaultABI.json');
 
+// Create providers and wallet
+const bnbProvider = new WebSocketProvider(bnbProviderUrl);
+
 // Main function to listen to events
 const main = async () => {
   try {
@@ -18,6 +21,11 @@ const main = async () => {
     const bnbVaultContract = new Contract(bnbVaultAddress, bnbVaultABI, bnbProvider);
 
     console.log(`Listening for TokenPurchase events on ${bnbVaultAddress}...`);
+
+    // Test listen
+    bnbProvider.on("block", (blockNumber) => {
+          console.log("New block:", blockNumber);
+        });
 
     // Listen for TokenPurchase events on BNB Smart Chain
     bnbVaultContract.on('TokenPurchase', async (buyer, amount, value, chainId, event) => {
